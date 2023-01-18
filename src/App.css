@@ -1,0 +1,12 @@
+.inputError {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  border: 1px solid rgba(229, 0, 0, 1) !important;
+}
+
+.error-text {
+  color: #e50000;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+}

@@ -1,0 +1,15 @@
+button{
+    right: 70px;
+    
+}
+
+input{
+    color:black;
+
+
+}
+
+input:focus{
+    outline: none;
+    border:none;
+}

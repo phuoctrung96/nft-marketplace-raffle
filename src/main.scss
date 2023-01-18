@@ -1,0 +1,29 @@
+// .ReactModal__Overlay ReactModal__Overlay--after-open {
+//   -webkit-filter: blur(0px) !important;
+//   filter: blur(0px) !important;
+
+//   @at-root #root {
+//     overflow: hidden;
+//     -webkit-backdrop-filter: blur(6px);
+//     backdrop-filter: blur(6px);
+//     background-color: red !important;
+//   }
+// }
+
+.filter-blur {
+  border: none !important;
+  > div {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    background-color: transparent !important;
+    > div {
+      border: none !important;
+    }
+  }
+}
+
+.disable-arrows::-webkit-outer-spin-button,
+.disable-arrows::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

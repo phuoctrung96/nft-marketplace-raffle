@@ -1,0 +1,1216 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "vrfCoordinator",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "linkTokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "registrar",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "RaffleMarketplace__InvalidTickerId",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "caller",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "hoster",
+        "type": "address"
+      }
+    ],
+    "name": "RaffleMarketplace__OnlyHosterAllowed",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "RaffleMarketplace__RaffleNotCreated",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RaffleMarketplace__RaffleVerified",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "raffleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "stageType",
+        "type": "uint8"
+      }
+    ],
+    "name": "RaffleMarketplace__StageAlreadyExist",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "raffleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "stageType",
+        "type": "uint8"
+      }
+    ],
+    "name": "RaffleMarketplace__StageDoesNotExist",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "raffleTicker",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "hoster",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isVerifiedByMarketplace",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "raffleAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "enum RaffleLibrary.RaffleCategory",
+            "name": "category",
+            "type": "uint8"
+          },
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "raffleDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "threshold",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string[]",
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "charityName",
+                "type": "string"
+              },
+              {
+                "internalType": "address payable",
+                "name": "charityAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "percentToDonate",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct RaffleLibrary.CharityInformation",
+            "name": "charityInfo",
+            "type": "tuple"
+          },
+          {
+            "internalType": "address payable[]",
+            "name": "winners",
+            "type": "address[]"
+          },
+          {
+            "internalType": "enum RaffleLibrary.RaffleState",
+            "name": "raffleState",
+            "type": "uint8"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct RaffleLibrary.Raffle",
+        "name": "raffle",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "enum RaffleLibrary.StageType",
+            "name": "stageType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketsAvailable",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketsSold",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct RaffleLibrary.RaffleStage[]",
+        "name": "stages",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "prizeTitle",
+            "type": "string"
+          },
+          {
+            "internalType": "enum RaffleLibrary.PrizeCollectionCountry",
+            "name": "country",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "prizeAmount",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct RaffleLibrary.RafflePrize[]",
+        "name": "prizes",
+        "type": "tuple[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "ongoingStage",
+        "type": "uint8"
+      }
+    ],
+    "name": "RaffleCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "raffleTicker",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "enum RaffleLibrary.StageType",
+            "name": "stageType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketsAvailable",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketsSold",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct RaffleLibrary.RaffleStage",
+        "name": "stage",
+        "type": "tuple"
+      }
+    ],
+    "name": "RaffleStageAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "raffleTicker",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "stageType",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "availability",
+        "type": "uint256"
+      }
+    ],
+    "name": "RaffleStageTicketAvailabilityUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "raffleTicker",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "stageType",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      }
+    ],
+    "name": "RaffleStageTicketPriceUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "raffleTicker",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "enum RaffleLibrary.RaffleState",
+        "name": "state",
+        "type": "uint8"
+      }
+    ],
+    "name": "RaffleStateUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "raffleTicker",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "stageType",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "ticketCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "RaffleTicketBought",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "raffleTicker",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "deployedRaffle",
+        "type": "address"
+      }
+    ],
+    "name": "RaffleVerified",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "raffleTicker",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address payable[]",
+        "name": "winners",
+        "type": "address[]"
+      }
+    ],
+    "name": "RaffleWinnersPicked",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "consumerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "addConsumer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "raffleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "stageType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "ticketsAvailable",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "ticketPrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "addStage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "receivingWallet",
+        "type": "address"
+      }
+    ],
+    "name": "cancelSubscription",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum RaffleLibrary.RaffleCategory",
+        "name": "_category",
+        "type": "uint8"
+      },
+      {
+        "internalType": "string",
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "raffleDuration",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "threshold",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string[]",
+        "name": "images",
+        "type": "string[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "prizeTitle",
+            "type": "string"
+          },
+          {
+            "internalType": "enum RaffleLibrary.PrizeCollectionCountry",
+            "name": "country",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "prizeAmount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct RaffleLibrary.RafflePrize[]",
+        "name": "prizes",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "charityName",
+            "type": "string"
+          },
+          {
+            "internalType": "address payable",
+            "name": "charityAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "percentToDonate",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct RaffleLibrary.CharityInformation",
+        "name": "charityInfo",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "enum RaffleLibrary.StageType",
+            "name": "stageType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketsAvailable",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketsSold",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct RaffleLibrary.RaffleStage[]",
+        "name": "stages",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "createRaffle",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "raffleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "stageType",
+        "type": "uint8"
+      }
+    ],
+    "name": "doesRaffleStageExists",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getNextTickerId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getOngoingRaffleStage",
+    "outputs": [
+      {
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "stageType",
+        "type": "uint8"
+      }
+    ],
+    "name": "getParticularRaffleStage",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum RaffleLibrary.StageType",
+            "name": "stageType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketsAvailable",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketsSold",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct RaffleLibrary.RaffleStage",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRaffleAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRaffleById",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "isVerifiedByMarketplace",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "raffleAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "enum RaffleLibrary.RaffleCategory",
+            "name": "category",
+            "type": "uint8"
+          },
+          {
+            "internalType": "string",
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "raffleDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "threshold",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string[]",
+            "name": "images",
+            "type": "string[]"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "charityName",
+                "type": "string"
+              },
+              {
+                "internalType": "address payable",
+                "name": "charityAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "percentToDonate",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct RaffleLibrary.CharityInformation",
+            "name": "charityInfo",
+            "type": "tuple"
+          },
+          {
+            "internalType": "address payable[]",
+            "name": "winners",
+            "type": "address[]"
+          },
+          {
+            "internalType": "enum RaffleLibrary.RaffleState",
+            "name": "raffleState",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct RaffleLibrary.Raffle",
+        "name": "",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "prizeTitle",
+            "type": "string"
+          },
+          {
+            "internalType": "enum RaffleLibrary.PrizeCollectionCountry",
+            "name": "country",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "prizeAmount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct RaffleLibrary.RafflePrize[]",
+        "name": "",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "enum RaffleLibrary.StageType",
+            "name": "stageType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketsAvailable",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketsSold",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct RaffleLibrary.RaffleStage[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRaffleHosterById",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRaffleStagesById",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum RaffleLibrary.StageType",
+            "name": "stageType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketsAvailable",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ticketsSold",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct RaffleLibrary.RaffleStage[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRaffleVerificationInfo",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getSubscription",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "i_link",
+    "outputs": [
+      {
+        "internalType": "contract LinkTokenInterface",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "raffleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "stageType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "ticketAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "modifyStagePrice",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "raffleId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "stageType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "ticketsAvailable",
+        "type": "uint256"
+      }
+    ],
+    "name": "modifyStageTickets",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "internalType": "bytes",
+        "name": "encryptedEmail",
+        "type": "bytes"
+      },
+      {
+        "internalType": "address",
+        "name": "upkeepContract",
+        "type": "address"
+      },
+      {
+        "internalType": "uint32",
+        "name": "gasLimit",
+        "type": "uint32"
+      },
+      {
+        "internalType": "address",
+        "name": "adminAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "checkData",
+        "type": "bytes"
+      },
+      {
+        "internalType": "uint96",
+        "name": "amount",
+        "type": "uint96"
+      },
+      {
+        "internalType": "uint8",
+        "name": "source",
+        "type": "uint8"
+      }
+    ],
+    "name": "registerAndPredictID",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "registrar",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "consumerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "removeConsumer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "s_subscriptionId",
+    "outputs": [
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "topUpSubscription",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "stageType",
+        "type": "uint8"
+      }
+    ],
+    "name": "updateCurrentOngoingStage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum RaffleLibrary.RaffleState",
+        "name": "state",
+        "type": "uint8"
+      }
+    ],
+    "name": "updateRaffleState",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "enum RaffleLibrary.StageType",
+        "name": "stageType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "ticketsSold",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateTicketsSold",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address payable[]",
+        "name": "winners",
+        "type": "address[]"
+      }
+    ],
+    "name": "updateWinners",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "verifyRaffle",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      }
+    ],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,*::before,*::after{
+    box-sizing: border-box;
+    
+}
+
+body{
+    overflow-x: hidden;
+    /* z-index: 30; */
+}
+
+.inner-carousel{
+    transition: transform 0.3s ease-in-out;
+}
+
+
+
+.bg{
+    z-index: -2;
+}
+
+.white-arrow>*{
+    stroke: white;
+}
