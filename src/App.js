@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, Routes, Route, Link, Navigate } from 'react-router-dom'
-import { Web3Modal, useAccount, useBalance, useSigner } from '@web3modal/react'
-import { ethers, Signer } from 'ethers'
+import { useNavigate, Routes, Route } from 'react-router-dom'
+import { Web3Modal, useAccount, useSigner } from '@web3modal/react'
+import { ethers } from 'ethers'
 import { chains } from '@web3modal/ethereum'
 import { useQuery } from '@apollo/client'
 import { AllRafflesQuery } from './utils/query'
@@ -9,17 +9,16 @@ import Header from './components/Header/Header'
 import LandingPage from './Pages/LandingPage'
 import CreateRaffle from './Pages/CreateRaffle'
 import Dashboard from './Pages/Dashboard'
-import parseAddress from './utils/parseAddress'
 import RaffleMarketplaceABI from './utils/RaffleMarketplace.json'
 import PromoPage from './Pages/PromoPage'
 import './App.css'
+import ProfilePage from './Pages/Profile'
 
 function App() {
   const { account, isReady } = useAccount()
-  const { loading, error, data } = useQuery(AllRafflesQuery)
-  const { data: dataSigner, error: errorSigner, isLoading, refetch } = useSigner()
+  const { data } = useQuery(AllRafflesQuery)
+  const { data: dataSigner } = useSigner()
 
-  const navigate = useNavigate()
   const [userAccount, setUserAccount] = useState('')
   const [raffles, setRaffles] = useState([])
   const [contract, setContract] = useState()
@@ -65,6 +64,7 @@ function App() {
         <Route path='/create' element={<CreateRaffle contract={contract} />} />
         <Route path='/dashboard' element={<Dashboard raffles={raffles} />} />
         <Route path='/promo' element={<PromoPage />} />
+        <Route path='/profile' element={<ProfilePage raffles={raffles}/>} />
       </Routes>
 
       <Web3Modal config={config} />

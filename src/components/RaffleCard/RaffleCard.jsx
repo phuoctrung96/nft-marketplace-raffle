@@ -23,13 +23,14 @@ const RaffleCard = ({ additionalClass, raffle }) => {
     }
   }, [raffle])
 
-  useEffect(() => {
-    if (raffle) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const signer = provider.getSigner()
-      setRaffleContract(new ethers.Contract(raffle.raffleAddress, RaffleABI, signer))
-    }
-  }, [raffle])
+  // useEffect(() => {
+  //   if (raffle) {
+  //     const provider = ((window.ethereum != null) ? new ethers.providers.Web3Provider(window.ethereum) : ethers.providers.getDefaultProvider());
+
+  //     const signer = provider.getSigner()
+  //     setRaffleContract(new ethers.Contract(raffle.raffleAddress, RaffleABI, signer))
+  //   }
+  // }, [raffle])
 
   useEffect(() => {
     setTicketNumber(Number(currentStage.ticketsAvailable) - Number(currentStage.ticketsSold))
@@ -44,7 +45,7 @@ const RaffleCard = ({ additionalClass, raffle }) => {
     raffle?.id && (
       <>
         <div
-          className={` sm:w-3/5 md:w-2/5    px-3 relative backdrop-filter py-2 sm:block z-100  bg-gradient-to-b drop-shadow-sm from-black to-[rgba(255,255,255,.15)]  rounded-xl ${additionalClass} `}>
+          className={`${additionalClass} sm:w-3/5 md:w-2/5 relative backdrop-filter sm:block z-100 bg-gradient-to-b drop-shadow-sm from-black to-[rgba(255,255,255,.15)] rounded-xl`}>
           <div className='relative'>
             <img
               src={`https://${raffle.images[0]}`}

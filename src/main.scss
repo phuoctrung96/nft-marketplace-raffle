@@ -12,11 +12,13 @@
 
 .filter-blur {
   border: none !important;
-  > div {
+
+  >div {
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
     background-color: transparent !important;
-    > div {
+
+    >div {
       border: none !important;
     }
   }
@@ -26,4 +28,8 @@
 .disable-arrows::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.h-information-full {
+  height: calc(100% - 48px);
 }

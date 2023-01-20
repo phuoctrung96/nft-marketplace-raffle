@@ -2,26 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-*,*::before,*::after{
+*,
+*::before,
+*::after {
     box-sizing: border-box;
-    
+
 }
 
-body{
+body {
     overflow-x: hidden;
     /* z-index: 30; */
 }
 
-.inner-carousel{
+.inner-carousel {
     transition: transform 0.3s ease-in-out;
 }
 
 
 
-.bg{
+.bg {
     z-index: -2;
 }
 
-.white-arrow>*{
+.white-arrow>* {
     stroke: white;
 }
+

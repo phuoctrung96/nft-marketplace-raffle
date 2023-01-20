@@ -35,6 +35,9 @@ const LandingPage = ({ address, connectWalletHandler }) => {
           desc='Whether it’s to increase public engagement or brand awareness; brands use Raffall to host public and private competitions that give their customers and staff the opportunity to win exciting prizes whilst at the same time supporting charities and causes they believe in.'
         />
       </TextCarousel>
+      <h3 className="text-3xl text-center font-clashDisplay font-medium mb-4">
+        Hottest Raffles
+      </h3>
       <ProductCarousel title='Hottest Raffles' />
       <CTA />
       <Footer />
