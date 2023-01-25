@@ -1,75 +1,78 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, Routes, Route, Link, Navigate } from 'react-router-dom'
-import { Web3Modal, useAccount, useBalance, useSigner } from '@web3modal/react'
-import { ethers, Signer } from 'ethers'
-import { chains } from '@web3modal/ethereum'
-import { useQuery } from '@apollo/client'
-import { AllRafflesQuery } from './utils/query'
-import Header from './components/Header/Header'
-import LandingPage from './Pages/LandingPage'
-import CreateRaffle from './Pages/CreateRaffle'
-import Dashboard from './Pages/Dashboard'
-import parseAddress from './utils/parseAddress'
-import RaffleMarketplaceABI from './utils/RaffleMarketplace.json'
-import PromoPage from './Pages/PromoPage'
-import './App.css'
+import { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import { Web3Modal, useAccount, useContract } from "@web3modal/react";
+import { chains } from "@web3modal/ethereum";
+import { useQuery } from "@apollo/client";
+import {
+  GoogleOAuthProvider,
+  useGoogleLogin,
+  GoogleLogin,
+} from "@react-oauth/google";
+import { AllRafflesQuery } from "./utils/query";
+import Header from "./components/Header/Header";
+import LandingPage from "./Pages/LandingPage";
+import CreateRaffle from "./Pages/CreateRaffle";
+import Dashboard from "./Pages/Dashboard";
+import RaffleMarketplaceABI from "./utils/RaffleMarketplace.json";
+import PromoPage from "./Pages/PromoPage";
+import ProfilePage from "./Pages/ProfilePage";
+import "./App.css";
+
+const config = {
+  projectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID,
+  theme: "dark",
+  accentColor: "teal",
+  ethereum: {
+    appName: "web3Modal",
+    chains: [chains.polygonMumbai],
+  },
+};
+
+const googleClientID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 function App() {
-  const { account, isReady } = useAccount()
-  const { loading, error, data } = useQuery(AllRafflesQuery)
-  const { data: dataSigner, error: errorSigner, isLoading, refetch } = useSigner()
-
-  const navigate = useNavigate()
-  const [userAccount, setUserAccount] = useState('')
-  const [raffles, setRaffles] = useState([])
-  const [contract, setContract] = useState()
-
-  const config = {
-    projectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID,
-    theme: 'dark',
-    accentColor: 'teal',
-    ethereum: {
-      appName: 'web3Modal',
-
-      chains: [chains.polygonMumbai],
-    },
-  }
-  useEffect(() => {
-    if (dataSigner) {
-      const etherContract = new ethers.Contract(
-        '0x6F9B8d6f980ac66aA0ef47BF492bcE0892dBBaa6',
-        RaffleMarketplaceABI,
-        dataSigner
-      )
-      setContract(etherContract)
-    }
-  }, [dataSigner])
+  const { account, isReady } = useAccount();
+  const { data } = useQuery(AllRafflesQuery);
+  const [userAccount, setUserAccount] = useState("");
+  const [raffles, setRaffles] = useState([]);
+  const { contract } = useContract({
+    address: process.env.REACT_APP_RAFFLE_MARKETPLACE_CONTRACT,
+    abi: RaffleMarketplaceABI,
+  });
 
   useEffect(() => {
     if (data?.raffles.length) {
-      setRaffles(data.raffles)
+      setRaffles(data.raffles);
     }
-  }, [data])
+  }, [data]);
 
   useEffect(() => {
     if (isReady) {
-      setUserAccount(account.address)
+      setUserAccount(account.address);
     }
-  }, [isReady, account])
+  }, [isReady, account]);
 
   return (
-    <div className='w-full min-h-screen py-2 text-white bg-black App font-poppins'>
+    <div className="w-full min-h-screen py-2 text-white bg-black App font-poppins">
+      <GoogleOAuthProvider clientId={googleClientID}>
       <Header account={userAccount} />
+      </GoogleOAuthProvider>
       <Routes>
-        <Route path='/' element={<LandingPage />} />
-        <Route path='/create' element={<CreateRaffle contract={contract} />} />
-        <Route path='/dashboard' element={<Dashboard raffles={raffles} />} />
-        <Route path='/promo' element={<PromoPage />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/create" element={<CreateRaffle />} />
+        <Route
+          path="/dashboard"
+          element={
+            <Dashboard marketplaceContract={contract} raffles={raffles} />
+          }
+        />
+        <Route path="/promo" element={<PromoPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
 
       <Web3Modal config={config} />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

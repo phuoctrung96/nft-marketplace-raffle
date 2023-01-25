@@ -6,7 +6,7 @@ const RaffleHero = ({ raffle }) => {
   
    return raffle?.id && (
       <div className=" my-8 h-64 rounded-xl relative w-11/12 mx-auto ">
-        {raffle?.images?.length && (
+        {raffle?.images?.length > 0 && (
           <img
             src={`https://${raffle.images[0]}`}
             alt=""
@@ -21,7 +21,7 @@ const RaffleHero = ({ raffle }) => {
             {raffle.description}
           </p>
           <div className="mt-4">
-            <p>Buy For:</p>
+            <p>Buy Ticket For:</p>
             <div className="ticekts w-full">
               <div className=" w-full flex gap-3  border border-accent rounded-3xl my-3">
                 <div className="price bg-accent py-3 outline outline-accent outline-1 text-center rounded-full w-3/5">

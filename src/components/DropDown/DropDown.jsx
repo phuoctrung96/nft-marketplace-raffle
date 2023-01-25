@@ -1,13 +1,23 @@
 import React, { useRef, useState } from 'react'
+import convert from '../../utils/convertETH'
 
-const DropDown = ({ data, title }) => {
+const DropDown = ({  title,prize,data }) => {
   const [isOpened, setOpened] = useState(false)
   const [height, setHeight] = useState('0px')
   const contentElement = useRef(null)
 
   const HandleOpening = () => {
     setOpened((prev) => !prev)
-    setHeight(!isOpened ? `${contentElement.current.scrollHeight}px` : '0px')
+    setHeight(!isOpened ? `${contentElement.current.scrollHeight+10}px` : '0px')
+  }
+
+  const getCollectionCountry=(code)=>{
+    switch(code){
+      case 1:
+        return "UK";
+        default:
+          return "Ukraine"
+    }
   }
 
   return (
@@ -29,12 +39,18 @@ const DropDown = ({ data, title }) => {
           </svg>
         </div>
       </div>
-      <div
+    {prize?.prizeTitle?  <div
         ref={contentElement}
         style={{ height: height }}
         className='overflow-hidden transition-all duration-200'>
-        {data && data()}
-      </div>
+        {prize?.prizeTitle!=="Money" ? <p> Collection Country: <span className='font-medium ml-2 rounded-sm font-sm bg-white text-accent     px-2 py-1'>{getCollectionCountry(prize?.prizeCollectionCountry)}</span></p>:<p>Amount: <span className='font-medium'>{convert(prize?.prizeAmount)}</span></p>}
+      </div>:(
+        <div  ref={contentElement}
+        style={{ height: height }}
+        className='overflow-hidden transition-all duration-200'>
+          {data()}
+        </div>
+      )}
     </div>
   )
 }

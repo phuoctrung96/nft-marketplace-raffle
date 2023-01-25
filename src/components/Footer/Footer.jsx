@@ -6,9 +6,9 @@ import { ReactComponent as Instagram } from '../../assets/Instagram.svg'
 import Button from '../Button'
 import { ReactComponent as ArrowIcon } from '../../assets/arrow-icon.svg'
 
-const Footer = () => {
+const Footer = ({additionalClass}) => {
   return (
-    <div className='flex flex-col w-4/5 gap-10 px-5 pb-10 mx-auto md:px-12 lg:flex-row'>
+    <div className={`flex flex-col w-4/5 gap-10 px-5 pb-10 mx-auto md:px-12 lg:flex-row ${additionalClass}`}>
       <div className='left basis-1/3'>
         <div className='flex items-center gap-4 logo'>
           <div className='w-3 h-3 rounded-full bg-accent'></div>

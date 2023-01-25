@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { ethers } from "ethers";
+import { useAccount, useContract } from "@web3modal/react";
 import CreateRaffleInfo from "../components/CreateRaffleInfo/CreateRaffleInfo";
 import RafflePrizes from "../components/RafflePrizes/RafflePrizes";
 import ImageUploading from "react-images-uploading";
@@ -9,9 +11,9 @@ import { Web3Storage } from "web3.storage";
 import RaffleStages from "../components/RaffleStages/RaffleStages";
 import CreateRaffleHeader from "../components/CreateRaffleHeader";
 import CustomDatePicker from "../components/CustomDatePicker/CustomDatePicker";
-import { ethers } from "ethers";
+import RaffleMarketplaceABI from "../utils/RaffleMarketplace.json";
 
-const CreateRaffle = ({ contract }) => {
+const CreateRaffle = () => {
   const [raffleInfo, setRaffleInfo] = useState({
     raffleCategory: "",
     raffleTitle: "",
@@ -43,8 +45,8 @@ const CreateRaffle = ({ contract }) => {
   const [images, setImages] = useState([]);
 
   const [durationDate, setDurationDate] = useState(null);
-
-  const [currentSection, setCurrentSection] = useState("Raffle Info");
+  
+  const [currentSection, setCurrentSection] = useState('Raffle Info');
   const [isValid, setIsValid] = useState(false);
 
   const customStyles = {
@@ -84,9 +86,15 @@ const CreateRaffle = ({ contract }) => {
     },
   };
 
+  const { account } = useAccount();
+  const { contract } = useContract({
+    address: process.env.REACT_APP_RAFFLE_MARKETPLACE_CONTRACT,
+    abi: RaffleMarketplaceABI,
+  });
+
   useEffect(() => {
     setIsValid(validateRaffleInfo());
-  }, [raffleInfo, prizes, durationDate])
+  }, [raffleInfo, prizes, durationDate]);
 
   const onImageChange = (imageList, addUpdateIndex) => {
     // data for submit
@@ -109,35 +117,44 @@ const CreateRaffle = ({ contract }) => {
   };
 
   const createRaffleHandler = async () => {
-    let uris = [""];
-    const raffleImages = images.map((img) => img.file);
-    if (images.length > 0) {
-      uris = await storeFilesToIPFS(raffleImages);
+    try {
+      let uris = [""];
+      const raffleImages = images.map((img) => img.file);
+      if (images.length > 0) {
+        uris = await storeFilesToIPFS(raffleImages);
+      }
+
+      const { days, hours, minutes, seconds } = getTimeRemaining(durationDate);
+
+      const raffleDuration = days * 86400 + hours * 3600 + minutes * 60 + seconds;
+
+      const charityInfo = {
+        charityName: raffleInfo.charityName,
+        charityAddress: raffleInfo.charityAddress,
+        percentToDonate: raffleInfo.percentToDonate,
+      };
+
+      //TODO: sort stages by each stageType, put presale upper than sale, sale upper than premium
+
+      const raffleParams = [
+        raffleInfo.raffleCategory,
+        raffleInfo.raffleTitle,
+        raffleInfo.raffleDescription,
+        raffleDuration,
+        raffleInfo.raffleThreshold,
+        uris,
+        prizes,
+        charityInfo,
+        stages,
+      ];
+
+      const signer = await account.connector.getSigner();
+      const signedContract = contract.connect(signer);
+      const tx = await signedContract.createRaffle(...raffleParams);
+      console.log("success:: ", tx);
+    } catch (err) {
+      console.log("error:: ", err);
     }
-
-    const raffleDuration = getTimeRemaining(durationDate).seconds;
-
-    const charityInfo = {
-      charityName: raffleInfo.charityName,
-      charityAddress: raffleInfo.charityAddress,
-      percentToDonate: raffleInfo.percentToDonate,
-    };
-
-    //TODO: sort stages by each stageType, put presale upper than sale, sale upper than premium
-
-    const raffleParams = [
-      raffleInfo.raffleCategory,
-      raffleInfo.raffleTitle,
-      raffleInfo.raffleDescription,
-      raffleDuration,
-      raffleInfo.raffleThreshold,
-      uris,
-      prizes,
-      charityInfo,
-      stages,
-    ];
-
-    const tx = await contract.createRaffle(...raffleParams);
   };
 
   // create function to check if all raffleInfo is filled
@@ -198,7 +215,6 @@ const CreateRaffle = ({ contract }) => {
       }
 
       error = error.slice(0, -2);
-
       alert(`Please fill in the following fields: ${error}`);
     }
   };

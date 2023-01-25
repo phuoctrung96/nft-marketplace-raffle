@@ -58,8 +58,8 @@ const Hero = () => {
         <RaffleCard/>
         <div className="text-info  sm:w-3/5 md:w-1/2 w-full md:top-11 relative">
           <h1 className="text-3xl font-clashDisplay font-bold ">The platform for <span className="text-accent">Raffling items</span></h1>
-          <p className="desc text-sm mt-8 text-text-color font-poppins">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. <span className="block mt-5">
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </span></p>
+          <p className="desc text-sm mt-8 text-text-color font-poppins">Irrespective of the country you reside in, lotteries are found all across the globe. It’s arguably the most popular form of gambling, as you put in so little with a potential massive upside. Winning the lottery is much harder than it sounds, but so many people sign up in hopes they’ll become a millionaire. The lottery can be played in all forms of currencies in today’s age. At the moment there are several cryptocurrency lotteries out there that work solely in cryptocurrencies such as Bitcoin and Ethereum, and give out the prizes in those currencies too. <br/>
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
         </div>
       </div>
     </div>
