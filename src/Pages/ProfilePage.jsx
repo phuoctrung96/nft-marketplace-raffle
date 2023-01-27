@@ -68,8 +68,8 @@ const ProfilePage = () => {
           <h3 className="text-3xl font-clashDisplay font-medium mb-4">
             Your Raffles{" "}
             <span className="text-lg font-normal text-accent ml-4">
-              {userRaffles?.hostedRaffles.length +
-                userRaffles?.enteredRaffles.length}{" "}
+              {(userRaffles?.hostedRaffles.length || 0) +
+                (userRaffles?.enteredRaffles.length || 0)}{" "}
               items
             </span>
           </h3>

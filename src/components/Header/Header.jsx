@@ -12,6 +12,8 @@ const navLinks = [
   { text: "About us", link: "/about" },
   { text: "Create Raffle", link: "/create" },
   { text: "Raffles", link: "/dashboard" },
+  { text: "Profile", link: "/profile" },
+  { text: "Promo Raffle", link: "/promo-raffle" },
 ];
 
 const Header = ({ account }) => {

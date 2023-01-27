@@ -5,8 +5,6 @@ import { chains } from "@web3modal/ethereum";
 import { useQuery } from "@apollo/client";
 import {
   GoogleOAuthProvider,
-  useGoogleLogin,
-  GoogleLogin,
 } from "@react-oauth/google";
 import { AllRafflesQuery } from "./utils/query";
 import Header from "./components/Header/Header";
@@ -14,7 +12,7 @@ import LandingPage from "./Pages/LandingPage";
 import CreateRaffle from "./Pages/CreateRaffle";
 import Dashboard from "./Pages/Dashboard";
 import RaffleMarketplaceABI from "./utils/RaffleMarketplace.json";
-import PromoPage from "./Pages/PromoPage";
+import PromoRafflePage from "./Pages/PromoRafflePage";
 import ProfilePage from "./Pages/ProfilePage";
 import "./App.css";
 
@@ -66,7 +64,7 @@ function App() {
             <Dashboard marketplaceContract={contract} raffles={raffles} />
           }
         />
-        <Route path="/promo" element={<PromoPage />} />
+        <Route path="/promo-raffle" element={<PromoRafflePage />} />
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>
 
