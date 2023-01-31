@@ -4,7 +4,7 @@ import { ReactComponent as Background } from "../../assets/bg-2.svg";
 import { useNavigate } from "react-router-dom";
 import "./Hero.css";
 import RaffleCard from "../RaffleCard/RaffleCard";
-import { Navigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 
 const Stat = ({ num, text }) => (
   <div className="text-center">

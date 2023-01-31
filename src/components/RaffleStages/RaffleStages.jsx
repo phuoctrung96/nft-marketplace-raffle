@@ -1,7 +1,7 @@
-import { info } from 'autoprefixer'
-import React, { useEffect, useState } from 'react'
+// import { info } from 'autoprefixer'
+import React, { useState } from 'react'
 import Select from 'react-select'
-import CreateRaffleHeader from '../CreateRaffleHeader'
+// import CreateRaffleHeader from '../CreateRaffleHeader'
 import InputBox from '../InputBox/InputBox'
 import Line from '../Line'
 import { ReactComponent as CloseIcon } from '../../assets/cross-icon.svg'
@@ -67,7 +67,7 @@ const RaffleStages = ({
   raffleInfo,
   setRaffleInfo,
 }) => {
-  const [selectedStages, setSelectedStages] = useState([stages[0].stageType])
+  // const [selectedStages, setSelectedStages] = useState([stages[0].stageType])
   const [isCharityContainerOpen, setIsCharityContainerOpen] = useState(false)
   const stagesOptions = [
     {

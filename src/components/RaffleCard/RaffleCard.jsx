@@ -15,6 +15,7 @@ const RaffleCard = ({
   const [ticketNumber, setTicketNumber] = useState("");
   const [raffleContract, setRaffleContract] = useState({});
   const [openModal, setOpenModal] = useState(false);
+  const [endTime, setEndTime] = useState({ days: 0, hours: 0, minutes: 0, secs: 0 });
 
   useEffect(() => {
     if (raffle?.stages?.length) {
@@ -49,12 +50,32 @@ const RaffleCard = ({
   };
 
   const calculateDurationDate = (raffle) => {
-    const secs = Math.floor(raffle?.raffleEndTime % 60);
-    const minutes = Math.floor((raffle?.raffleEndTime / 60) % 60);
-    const hours = Math.floor((raffle?.raffleEndTime / (60 * 60)) % 24);
-    const days = Math.floor(raffle?.raffleEndTime / (60 * 60 * 24));
-    return { days, hours, minutes, secs };
+    let raffleEndTime = raffle?.raffleEndTime
+    if (raffle && raffle.raffleEndTime) {
+      raffleEndTime = (Number(raffle.raffleEndTime) + Number(raffle.createdAt)) * 1000;
+    } else {
+      raffleEndTime = 0;
+    }
+    const now = new Date().getTime();
+    const expiration = raffleEndTime;
+    const diff = expiration - now;
+    const day = (Math.floor(diff / (1000 * 3600 * 24)));
+    const mod = diff % (1000 * 3600 * 24);
+    const hour = (Math.floor(mod / (1000 * 3600)));
+    const mod1 = mod % (1000 * 3600);
+    const minute = (Math.floor(mod1 / (1000 * 60)));
+    const mod2 = mod1 % (1000 * 60);
+    const second = (Math.floor(mod2 / 1000));
+    console.log(day, hour, minute, second, '----------')
+    setEndTime({ days: day > 0 ? day : 0, hours: hour > 0 ? hour : 0, minutes: minute > 0 ? minute : 0, secs: second > 0 ? second : 0 });
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      calculateDurationDate(raffle);
+    }, 60000);
+    return () => clearInterval(interval);
+  }, [raffle]);
 
   return (
     raffle?.id && (
@@ -92,20 +113,20 @@ const RaffleCard = ({
             <div className="flex items-center justify-center gap-10 mt-4 font-bold time font-clashDisplay">
               <div className="hour text-center after:content-[':']   after:inline-block after:absolute after:top-2 after:font-bold after:-right-5 relative">
                 <h3 className="text-xl font-medium font-clashDisplay">
-                  {calculateDurationDate(raffle).days}
+                  {endTime.days}
                 </h3>
                 <p className="text-xs font-normal">Days</p>
               </div>
               <div className="minutes text-center after:content-[':']   after:inline-block after:absolute after:top-2 after:font-bold after:-right-5 relative">
                 {" "}
                 <h3 className="text-xl font-medium font-clashDisplay">
-                  {calculateDurationDate(raffle).hours}
+                  {endTime.hours}
                 </h3>
                 <p className="text-xs font-normal">Hours</p>
               </div>
               <div className="text-center seconds ">
                 <h3 className="text-xl font-medium font-clashDisplay">
-                  {calculateDurationDate(raffle).minutes}
+                  {endTime.minutes}
                 </h3>
                 <p className="text-xs font-normal">Minutes</p>
               </div>

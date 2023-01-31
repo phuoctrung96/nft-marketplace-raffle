@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 import { useAccount, useContract } from "@web3modal/react";
 import "./RaffleModal.style.css";
 import RaffleABI from "../../utils/Raffle.json";
-import { TailSpin } from "react-loader-spinner";
+// import { TailSpin } from "react-loader-spinner";
 
 Modal.setAppElement("#root");
 
@@ -125,7 +125,7 @@ const RaffleModal = ({
       if (data.raffleAddress && account.address===process.env.REACT_APP_ADMIN_WALLET_ADDRESS && raffleStates[data.currentState]==='Finished') {
         const signer = await account.connector.getSigner();
         const signedContract = raffleContract.connect(signer);
-        const res = await signedContract.getBalance()
+        // const res = await signedContract.getBalance()
         await signedContract.distributePrizes();
         setIsActionLoading(false);
       }

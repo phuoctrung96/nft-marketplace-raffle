@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import parseAddress from "../../utils/parseAddress";
 import Button from "../Button";
 import Logo from "../Logo";
 import { ReactComponent as Hamburger } from "../../assets/Hamburger.svg";
 import { ReactComponent as CloseNavIcon } from "../../assets/close.svg";
-import { useConnectModal, useAccount } from "@web3modal/react";
+import { useConnectModal } from "@web3modal/react";
 import { useGoogleLogin } from "@react-oauth/google";
 
 const navLinks = [
@@ -17,10 +17,14 @@ const navLinks = [
 ];
 
 const Header = ({ account }) => {
-  const { isOpen, open, close } = useConnectModal();
+  const {
+    open,
+    // isOpen,
+    // close
+  } = useConnectModal();
 
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const connectWallet = () => {
     open();
@@ -60,9 +64,8 @@ const Header = ({ account }) => {
         </nav>
         {account ? (
           <Button
-            text={`${parseAddress(account)} ${
-              account === process.env.REACT_APP_ADMIN_WALLET_ADDRESS ? "| " : ""
-            }`}
+            text={`${parseAddress(account)} ${account === process.env.REACT_APP_ADMIN_WALLET_ADDRESS ? "| " : ""
+              }`}
             accent
             additionalClass="px-10 ml-20"
           />
