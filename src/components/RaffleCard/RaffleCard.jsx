@@ -66,11 +66,11 @@ const RaffleCard = ({
     const minute = (Math.floor(mod1 / (1000 * 60)));
     const mod2 = mod1 % (1000 * 60);
     const second = (Math.floor(mod2 / 1000));
-    console.log(day, hour, minute, second, '----------')
     setEndTime({ days: day > 0 ? day : 0, hours: hour > 0 ? hour : 0, minutes: minute > 0 ? minute : 0, secs: second > 0 ? second : 0 });
   };
 
   useEffect(() => {
+    calculateDurationDate(raffle);
     const interval = setInterval(() => {
       calculateDurationDate(raffle);
     }, 60000);

@@ -147,6 +147,7 @@ const Dashboard = ({ raffles, marketplaceContract }) => {
                 </div>
                 {categories.map((category, i) => (
                   <p
+                    key={i}
                     onClick={() => setSelectedCategory(i)}
                     className="  border-b cursor-pointer hover:opacity-75 border-[rgba(255,255,255,0.3) pb-2 text-xs my-3"
                   >

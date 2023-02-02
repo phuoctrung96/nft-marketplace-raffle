@@ -34,10 +34,10 @@ const RaffleModal = ({
 
   const { account } = useAccount();
 
-  const { contract:raffleContract } = useContract({
+  const { contract: raffleContract } = useContract({
     address: data.raffleAddress,
     abi: RaffleABI,
-})
+  })
 
   useEffect(() => {
     if (data?.stages?.length) {
@@ -59,12 +59,24 @@ const RaffleModal = ({
   }, [data, modalIsOpen]);
 
   const convertSeconds = useMemo(() => {
-    let days = Math.floor(data.raffleEndTime / 86400);
-    let hours = Math.floor((data?.raffleEndTime - days * 86400) / 3600);
-    let minutes = Math.floor((data.raffleEndTime % 3600) / 60);
-    let secs = Math.floor((data.raffleEndTime % 3600) % 60);
-
-    return { days, hours, minutes, secs };
+    let raffle = data;
+    let raffleEndTime = raffle?.raffleEndTime
+    if (raffle && raffle.raffleEndTime) {
+      raffleEndTime = (Number(raffle.raffleEndTime) + Number(raffle.createdAt)) * 1000;
+    } else {
+      raffleEndTime = 0;
+    }
+    const now = new Date().getTime();
+    const expiration = raffleEndTime;
+    const diff = expiration - now;
+    const day = (Math.floor(diff / (1000 * 3600 * 24)));
+    const mod = diff % (1000 * 3600 * 24);
+    const hour = (Math.floor(mod / (1000 * 3600)));
+    const mod1 = mod % (1000 * 3600);
+    const minute = (Math.floor(mod1 / (1000 * 60)));
+    const mod2 = mod1 % (1000 * 60);
+    const second = (Math.floor(mod2 / 1000));
+    return { days: day, hours: hour, minutes: minute, secs: second };
   }, [data]);
 
   useEffect(() => {
@@ -110,7 +122,7 @@ const RaffleModal = ({
       if (marketplaceContract.address) {
         const signer = await account.connector.getSigner();
         const signedContract = marketplaceContract.connect(signer);
-      
+
         await signedContract.verifyRaffle(data.raffleTicker);
         setIsActionLoading(false);
       }
@@ -119,10 +131,10 @@ const RaffleModal = ({
     }
   };
 
-  const distributePrizes=async()=>{
+  const distributePrizes = async () => {
     setIsActionLoading(true);
     try {
-      if (data.raffleAddress && account.address===process.env.REACT_APP_ADMIN_WALLET_ADDRESS && raffleStates[data.currentState]==='Finished') {
+      if (data.raffleAddress && account.address === process.env.REACT_APP_ADMIN_WALLET_ADDRESS && raffleStates[data.currentState] === 'Finished') {
         const signer = await account.connector.getSigner();
         const signedContract = raffleContract.connect(signer);
         // const res = await signedContract.getBalance()
@@ -306,7 +318,7 @@ const RaffleModal = ({
         </div>
 
         {data.charity.charityAddress !==
-        "0x0000000000000000000000000000000000000000" ? (
+          "0x0000000000000000000000000000000000000000" ? (
           <div className="flex flex-col w-full h-auto py-10 ">
             <h3 className="mb-5">Charity</h3>
             <h4>{data.charity.charityName}</h4>
@@ -315,13 +327,13 @@ const RaffleModal = ({
         ) : null}
 
         {data.winners.length &&
-        data.winners[0] !== ethers.constants.AddressZero ? (
+          data.winners[0] !== ethers.constants.AddressZero ? (
           <div className="my-3">
             <h5 className="mb-3">
               {data.winners.length > 1 ? "Winners" : "Winner"}
             </h5>
-            {data.winners.map((winner) => (
-              <p className="text-sm  my-2 text-[#9C9C9C]">{winner}</p>
+            {data.winners.map((winner, i) => (
+              <p key={i} className="text-sm  my-2 text-[#9C9C9C]">{winner}</p>
             ))}
           </div>
         ) : null}
@@ -329,10 +341,10 @@ const RaffleModal = ({
         {account?.address === process.env.REACT_APP_ADMIN_WALLET_ADDRESS ? (
           <div className="flex items-center justify-center w-full gap-3 pb-10 mt-4">
             <Button
-              text={raffleStates[data.currentState]==='Not Verified' ? 'Verify Raffle' : 'Distribute Prizes'}
+              text={raffleStates[data.currentState] === 'Not Verified' ? 'Verify Raffle' : 'Distribute Prizes'}
               accent
               additionalClass=""
-              onClickHandler={raffleStates[data.currentState]==='Not Verified' ? verifyRaffle : distributePrizes}
+              onClickHandler={raffleStates[data.currentState] === 'Not Verified' ? verifyRaffle : distributePrizes}
               isActionLoading={isActionLoading}
             />
           </div>
